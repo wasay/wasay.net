@@ -1,0 +1,24 @@
+version: '2'
+name: 'site103_wasaynet'
+services:
+  jekyll:
+    container_name: '${DOCKER_NAME}-app'
+    image: jekyll/jekyll:latest
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - '${APP_PORT:-4000}:4000'
+    environment:
+      hostname: '${HOST_NAME}:host.docker.internal'
+    env_file: .env
+    command: jekyll serve --watch --force_polling --verbose
+    volumes:
+      - 'html-app:/srv/jekyll'
+    networks:
+      - html-net
+networks:
+  html-net:
+    driver: bridge
+volumes:
+  html-app:
+    driver: local
